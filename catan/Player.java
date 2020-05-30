@@ -1,24 +1,38 @@
+package catan;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Player{
-    private String name;
+    private String ID;
     private int victoryPoints;
     /* BRICK == 0 WOOD == 1 WHEAT == 2 SHEEP == 3 STONE == 4 */
     private int[] resources = new int[5];
     private ArrayList<DevCard> developmentCards;
-    HashSet<Position> buildingPositions = new HashSet<>();
+    HashSet<Integer> buildingPositions = new HashSet<>();
 
-    public Player(String user){
-        name = user;
+    public Player(String user, Board x) {
+        if(x.playerCount > 4) {
+            System.out.println("Maximum Players Has Been Reached");
+        } else {
+            ID = user + x.playerCount;
+            x.playerCount += 1;
+        }
     }
 
     /**
-     * Enables players to place structures on the board
-     * @param structure 'C' for city 'S' for settlement 'R' for road
+     * Allows a player to build a structure on the board
+     * @param structure 'C' == City, 'S' == Settlement, 'R' == Road
+     * @param location vertex / edge that is trying to be built on
+     * @param x the board the game is being played on
+     * @param firstTurn different rules apply for first move settlement placements
      */
-    public void build(char structure, Position location){
+    public void build(char structure, int location, Board x, boolean firstTurn){
+        if(structure == 'S') {
+            if(firstTurn) {
 
+            }
+        }
     }
 
     /**
