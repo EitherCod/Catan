@@ -4,18 +4,17 @@ import java.util.Random;
 
 public class Board {
     // 3 , 4 , 4 , 5, 5, 6, 6, 5, 5, 4, 4 , 3  = 54
-    HashMap<Integer, String> verticies;
-    HashMap<int[], String> edges;
-    HashMap<int[], String> harbors;
-    HashMap<Integer, Integer> tilesToDiceNum;
-    HashMap<Integer, Integer> tilesToResource;
+    HashMap<Integer, String> verticies = new HashMap<>();
+    HashMap<int[], String> edges = new HashMap<>();;
+    HashMap<int[], String> harbors = new HashMap<>();;
+    HashMap<Integer, Integer> tilesToDiceNum = new HashMap<>();;
+    HashMap<Integer, Integer> tilesToResource = new HashMap<>();;
     int[][] tiles = new int[19][];
     int[][] adjecenyList = new int[54][];
     int[][] portVerticies = new int[9][];
     int playerCount = 1;
 
     public Board(){
-
         mapLayout();
     }
 
@@ -153,7 +152,7 @@ public class Board {
 
     private void initTileToDice(){
         int[] sequence = {0, 1 , 2, 6 , 11, 15, 18, 17, 16, 12, 7 , 3 , 4, 5, 10, 14, 13, 8, 9};
-        int[] diceNums = {5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11};
+        int[] diceNums = {5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 9, 11};
         int[] potentialStarts = {0, 2, 8, 6};
 
         Random random = new Random();
@@ -177,5 +176,10 @@ public class Board {
             result += " Tile " + i + " Dice Number: " + tilesToDiceNum.get(i) + " Resource: " + tilesToResource.get(i) + "\n";
         }
         return result;
+    }
+
+    public static void main(String[] args){
+        Board x = new Board();
+        System.out.println(x);
     }
 }
