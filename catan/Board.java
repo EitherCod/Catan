@@ -4,15 +4,15 @@ import java.util.Random;
 
 public class Board {
     // 3 , 4 , 4 , 5, 5, 6, 6, 5, 5, 4, 4 , 3  = 54
-    HashMap<Integer, String> verticies = new HashMap<>();
-    HashMap<int[], String> edges = new HashMap<>();;
-    HashMap<int[], String> harbors = new HashMap<>();;
-    HashMap<Integer, Integer> tilesToDiceNum = new HashMap<>();;
-    HashMap<Integer, Integer> tilesToResource = new HashMap<>();;
-    int[][] tiles = new int[19][];
-    int[][] adjecenyList = new int[54][];
-    int[][] portVerticies = new int[9][];
-    int playerCount = 1;
+    private HashMap<Integer, String> verticies = new HashMap<>();
+    private HashMap<int[], String> edges = new HashMap<>();;
+    private HashMap<int[], String> harbors = new HashMap<>();;
+    private HashMap<Integer, Integer> tilesToDiceNum = new HashMap<>();;
+    private HashMap<Integer, Resource> tilesToResource = new HashMap<>();;
+    private int[][] tiles = new int[19][];
+    private int[][] adjecenyList = new int[54][];
+    private int[][] portVerticies = new int[9][];
+    private int playerCount = 1;
 
     public Board(){
         mapLayout();
@@ -113,6 +113,10 @@ public class Board {
         }
     }
 
+    private void setHarbors(){
+        // Still need to set each harbor on the map
+    }
+
     private void initTilesToResources(){
         tiles[0] = new int[]{0, 3, 4, 7 , 8, 12};
         tiles[1] = new int[]{1, 4, 5, 8, 9, 13};
@@ -135,14 +139,15 @@ public class Board {
         tiles[18] = new int[]{41, 45, 46, 49, 50, 53};
 
         /* BRICK == 0 WOOD == 1 WHEAT == 2 SHEEP == 3 STONE == 4  THIEF == 5*/
-        int[] resourceTiles = new int[]{3, 4, 4, 4, 3, 1};
+        int[] resourceTiles = {3, 4, 4, 4, 3, 1};
+        Resource[] resourceIndex = {Resource.BRICK, Resource.WOOD, Resource.WHEAT, Resource.STONE, Resource.SHEEP, Resource.THIEF};
         Random random = new Random();
         int assignedResource = 0;
         for(int x = 0; x < 19; x++){
             while (true) {
                 assignedResource = random.nextInt(6);
                 if(resourceTiles[assignedResource] != 0){
-                    tilesToResource.put(x, assignedResource);
+                    tilesToResource.put(x, resourceIndex[assignedResource]);
                     resourceTiles[assignedResource] -= 1;
                     break;
                 }
@@ -151,8 +156,9 @@ public class Board {
     }
 
     private void initTileToDice(){
+        //19 TILES
         int[] sequence = {0, 1 , 2, 6 , 11, 15, 18, 17, 16, 12, 7 , 3 , 4, 5, 10, 14, 13, 8, 9};
-        int[] diceNums = {5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 9, 11};
+        int[] diceNums = {5, 2, 6, 3, 8, 10, 9, 12, 11, 4, 8, 10, 9, 4, 5, 6, 3, 11};
         int[] potentialStarts = {0, 2, 8, 6};
 
         Random random = new Random();
@@ -160,13 +166,59 @@ public class Board {
         int startingPoint = random.nextInt(4);
         int start = potentialStarts[startingPoint];
 
-        for(int x = 0; x < 19; x++){
-            tilesToDiceNum.put(sequence[start], diceNums[x]);
-            start++;
-            if(start > 18){
-                start = 0;
+        int totalCounter = 0;
+        int sequenceCounter = start;
+        int diceNumCounter = 0;
+        while(totalCounter < 19){
+            if(sequenceCounter >= 19){
+                sequenceCounter = 0;
             }
+            int currentTile = sequence[sequenceCounter];
+            if(tilesToResource.get(currentTile) == Resource.THIEF){
+                tilesToDiceNum.put(currentTile, -1);
+                sequenceCounter++;
+
+            }
+            else {
+                tilesToDiceNum.put(currentTile, diceNums[diceNumCounter]);
+                sequenceCounter++;
+                diceNumCounter++;
+            }
+            totalCounter++;
         }
+    }
+
+    int incrementCount(){
+        playerCount += 1;
+        return playerCount;
+    }
+
+    int getPlayerCount(){
+        return playerCount;
+    }
+
+    HashMap<int[], String> getEdges() {
+        return edges;
+    }
+
+    HashMap<Integer, Integer> getTilesToDiceNum() {
+        return tilesToDiceNum;
+    }
+
+    HashMap<Integer, Resource> getTilesToResource() {
+        return tilesToResource;
+    }
+
+    int[][] getAdjecenyList() {
+        return adjecenyList;
+    }
+
+    int[][] getTiles() {
+        return tiles;
+    }
+
+    HashMap<Integer, String> getVerticies() {
+        return verticies;
     }
 
     @Override
@@ -176,10 +228,5 @@ public class Board {
             result += " Tile " + i + " Dice Number: " + tilesToDiceNum.get(i) + " Resource: " + tilesToResource.get(i) + "\n";
         }
         return result;
-    }
-
-    public static void main(String[] args){
-        Board x = new Board();
-        System.out.println(x);
     }
 }
